@@ -41,8 +41,22 @@ var map = new mapboxgl.Map({
     center: crs.origin,
 });
 
+// Project GeoJSON coordinate to the map's current state
+function project(d) {
+    return map.project(new mapboxgl.LngLat(+d[0], +d[1]));
+}
+
 // Get Mapbox map canvas container
 var canvas = map.getCanvasContainer();
+
+// Overlay d3 on the map
+var svg = d3.select(canvas)
+    .append("svg")
+    .attr("width", $("svg").parent().width())
+    .attr("height", $("svg").parent().height())
+
+const mapGroup = svg.append("g")
+    .attr('class', 'map-group');
 
 // get location panel elements
 var panelCoords = d3.select('#location-coord');
@@ -50,9 +64,21 @@ var panelDeclination = d3.select('#location-declination');
 var panelMagnitude = d3.select('#location-magnitude');
 
 map.on('click', function(e) {
+
     const coordinates = [e.lngLat.lng, e.lngLat.lat]
     panelCoords.text(formatLocation(coordinates))
-    
+
+    d3.selectAll("circle").remove()
+
+    var circle = mapGroup.selectAll("stations")
+        .append("stations")
+        .data([coordinates])
+        .enter()
+        .append("circle")
+        .attr("r", 5)
+        .attr("class", "station")
+        .attr("cx", function(d) { return project(d).x })
+        .attr("cy", function(d) { return project(d).y });
 
     let headers = new Headers();
     let url = new URL('https://geomag-api.herokuapp.com/')
@@ -94,3 +120,15 @@ map.on('click', function(e) {
     });
 
 })
+
+// Update on map interaction
+map.on("viewreset", update);
+map.on("move",      update);
+map.on("moveend",   update);
+
+// Update d3 shapes' positions to the map's current state
+function update() {
+    d3.selectAll("circle")
+        .attr("cx", function(d) { return project(d).x })
+        .attr("cy", function(d) { return project(d).y });
+};

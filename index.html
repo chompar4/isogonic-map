@@ -7,7 +7,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js'></script>
-    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Yanone+Kaffeesatz:200" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link href="style.css" rel="stylesheet" type="text/css"/>
   </head>
 
@@ -18,22 +18,52 @@
             <div id="panel"> 
                 <div id="location">
                     <p>
-                      <span id="location-close" class="text-button"> ✕ </span> 
-                      <span id="location-coord"></span> 
-                    </p>
-                    <p>
-                      <span id="location-date"></span>
+                      <span id="location-close"> ✕ </span> 
                     </p>
                     <p>
                       <span id="location-loading"></span>
-                    </p>  
-                    <p>
-                        <span id="location-declination"></span>
-                    </p>
-                    <p>
-                        <span id="location-magnitude"></span>
                     </p>
                 </div>
+
+                <table>
+                  <tr id="coords">
+                    <th>Location </td>
+                    <td id="location-coord"></td>
+                  </tr>
+                  <tr id="date">
+                    <th>Date</th>
+                    <td id="location-date"></td>
+                  </tr>
+                  <tr id="decl">
+                    <th>Declination</th>
+                    <td id="location-declination"></td>
+                  </tr>
+                  <tr id="incl">
+                    <th>Inclination (Dip)</th>
+                    <td id="location-inclination"></td>
+                  </tr>
+                </table>
+
+                <table>
+                  <tr>
+                    <th id="detail-button">Field +</th>
+                  </tr>
+                </table>
+
+                <table>
+                  <tr id="mag-north">
+                    <th>North Component</th>
+                    <td id="magnitude-north"></td>
+                  </tr>
+                  <tr id="mag-east">
+                    <th>East Component</th>
+                    <td id="magnitude-east"></td>
+                  </tr>
+                  <tr id="mag-down">
+                    <th>Normal Component</th>
+                    <td id="magnitude-down"></td>
+                  </tr>
+                </table>
             </div>
           </footer>
         </div>

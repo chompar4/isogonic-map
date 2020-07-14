@@ -16,11 +16,17 @@ function formatLocation (coords) {
     lat = formatLat(coords[1])
     lng = formatLng(coords[0])
 
-    return `Location | ${lat}, ${lng}`
+    return `${lat}, ${lng}`
 }
 
 function formatDec (declination) {
+    // format declination to east / west of true north 
     return `${Math.abs(declination.toFixed(2))}°${declination < 0 ? "W": "E"}`
+}
+
+function formatInc (inclination) {
+    // format inclination (dip) to up / down of horizon line
+    return `${inclination.toFixed(2)}°`
 }
 
 function getDate() {
@@ -33,14 +39,14 @@ function getDate() {
 }
 
 function formatDate(date) {
-    return `Date | ${date.day}/${date.month}/${date.day}`
+    return `${date.day}-${date.month}-${date.year}`
 }
 
 // Set-up map
 mapboxgl.accessToken = 'pk.eyJ1Ijoiam9yZGl0b3N0IiwiYSI6ImQtcVkyclEifQ.vwKrOGZoZSj3N-9MB6FF_A';
 var map = new mapboxgl.Map({
     container: 'map-holder',
-    style: 'mapbox://styles/mapbox/light-v10',
+    style: 'mapbox://styles/mapbox/outdoors-v11',
     zoom: crs.zoom,
     center: crs.origin,
 });
@@ -66,20 +72,29 @@ const mapGroup = svg.append("g")
 var panelCoords = d3.select('#location-coord');
 var panelDate = d3.select('#location-date');
 var panelDeclination = d3.select('#location-declination');
-var panelMagnitude = d3.select('#location-magnitude');
+var panelInclination = d3.select('#location-inclination');
+var panelMagnitudeNorth = d3.select('#magnitude-north');
+var panelMagnitudeEast = d3.select('#magnitude-east');
+var panelMagnitudeDown = d3.select('#magnitude-down');
 var panelLoading = d3.select('#location-loading')
+
+var panel = d3.select("#panel").style("display", "none")
 
 map.on('click', function(e) {
 
     let today = getDate()
     const coordinates = [e.lngLat.lng, e.lngLat.lat]
+    panel.style("display", "block")
     panelCoords.text(formatLocation(coordinates))
     panelDate.text(formatDate(today))
 
     // reset all vals
     d3.selectAll("circle").remove()
     panelDeclination.text('')
-    panelMagnitude.text('')
+    panelInclination.text('')
+    panelMagnitudeNorth.text('')
+    panelMagnitudeEast.text('')
+    panelMagnitudeDown.text('')
     panelLoading.text('Calculating...')
 
     mapGroup.selectAll("locations")
@@ -116,8 +131,11 @@ map.on('click', function(e) {
     .then(response => response.json())
     .then(field => {
 
-        panelDeclination.text(`Declination | ${formatDec(field.D)}`)
-        panelMagnitude.text(`Magnitude | ${field.F.toFixed(2)} nT`)
+        panelDeclination.text(`${formatDec(field.D)}`)
+        panelInclination.text(`${formatInc(field.I)}`)
+        panelMagnitudeNorth.text(`${field.X.toFixed(2)} nT`)
+        panelMagnitudeEast.text(`${field.Y.toFixed(2)} nT`)
+        panelMagnitudeDown.text(`${field.Z.toFixed(2)} nT`)
         panelLoading.text('')
 
         // signal the values have loaded
@@ -130,6 +148,23 @@ map.on('click', function(e) {
 
 })
 
+const hiddenDetails = [
+    d3.select("#mag-north"),
+    d3.select("#mag-east"),
+    d3.select("#mag-down"),
+]
+
+function show(things) {
+    things.map(x => x.style("display", "block"))
+}
+
+function hide(things) {
+    things.map(x => x.style("display", "none"))
+}
+
+// hide hidden details initially 
+hide(hiddenDetails)
+
 // Update on map interaction
 map.on("viewreset", update);
 map.on("move",      update);
@@ -141,3 +176,13 @@ function update() {
         .attr("cx", function(d) { return project(d).x })
         .attr("cy", function(d) { return project(d).y });
 };
+
+// expand detail panel
+d3.select("#detail-button")
+    .on("click", function(){
+        if (hiddenDetails[0].style("display") == "none"){
+            show(hiddenDetails)
+        } else {
+            hide(hiddenDetails)
+        }
+    })

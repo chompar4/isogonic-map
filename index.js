@@ -19,6 +19,15 @@ function formatLocation (coords) {
     return `Location | ${lat}, ${lng}`
 }
 
+function getDate() {
+    var today = new Date();
+    return {
+        day: today.getDate(),
+        month: today.getMonth() + 1, //January is 0!,
+        year: today.getFullYear()
+    }
+}
+
 // Set-up map
 mapboxgl.accessToken = 'pk.eyJ1Ijoiam9yZGl0b3N0IiwiYSI6ImQtcVkyclEifQ.vwKrOGZoZSj3N-9MB6FF_A';
 var map = new mapboxgl.Map({
@@ -37,4 +46,37 @@ var panelCoords = d3.select('#location-coord');
 map.on('click', function(e) {
     const coordinates = [e.lngLat.lng, e.lngLat.lat]
     panelCoords.text(formatLocation(coordinates))
+    
+
+    let headers = new Headers();
+    let url = new URL('https://geomag-api.herokuapp.com/')
+
+    let today = getDate()
+
+    params = {
+        lng: coordinates[0],
+        lat: coordinates[1],
+        altitude_km: 0, 
+        day: today.day, 
+        mth: today.month,
+        yr: today.year
+    }
+
+    console.log(params)
+
+    url.search = new URLSearchParams(params).toString();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'application/json');
+
+    fetch(url, {
+        mode: 'cors',
+        method: 'GET',
+        headers: headers
+    })
+    .then(response => response.json())
+    .then(json => console.log(json))
+    .catch(error => {
+        console.log('Fetch failed : ' + error.message)
+    });
+
 })

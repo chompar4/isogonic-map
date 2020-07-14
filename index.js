@@ -19,6 +19,10 @@ function formatLocation (coords) {
     return `Location | ${lat}, ${lng}`
 }
 
+function formatDec (declination) {
+    return `${Math.abs(declination.toFixed(2))}°${declination < 0 ? "W": "E"}`
+}
+
 function getDate() {
     var today = new Date();
     return {
@@ -40,8 +44,10 @@ var map = new mapboxgl.Map({
 // Get Mapbox map canvas container
 var canvas = map.getCanvasContainer();
 
-// get location panel options
+// get location panel elements
 var panelCoords = d3.select('#location-coord');
+var panelDeclination = d3.select('#location-declination');
+var panelMagnitude = d3.select('#location-magnitude');
 
 map.on('click', function(e) {
     const coordinates = [e.lngLat.lng, e.lngLat.lat]
@@ -74,7 +80,15 @@ map.on('click', function(e) {
         headers: headers
     })
     .then(response => response.json())
-    .then(json => console.log(json))
+    .then(field => {
+        console.log(field)
+
+        const mag = Math.sqrt(field.X * field.X + field.Y * field.Y).toFixed(2)
+
+        panelDeclination.text(`Declination | ${formatDec(field.D)}`)
+        panelMagnitude.text(`Magnitude | ${mag} nT`)
+
+    })
     .catch(error => {
         console.log('Fetch failed : ' + error.message)
     });

@@ -1,8 +1,8 @@
 body {
     margin: 0;
     padding:0;
-    font-family: 'Verdana', sans-serif;
-    font-weight: 200;
+    /* font: "10px sans-serif"; */
+    /* font-weight: 200; */
     font-size: 15px;
   }
   svg {
@@ -61,7 +61,7 @@ body {
     margin: 0;
     padding: 0;
     border: 0;
-    color: #ffffff;
+    color: white;
     transition: color 125ms ease-in;
     -webkit-transition: color 125ms ease-in;
   }
@@ -91,7 +91,7 @@ body {
   }
 
   a, p, li .text-button {
-    color: #888888;
+    color: whitesmoke;
     font-size: 1em;
   }
 
@@ -125,7 +125,7 @@ body {
 
   .location {
     fill: none;
-    stroke: #20A4F3;
+    stroke: orange;
     stroke-width: 0.5;
     cursor: pointer;
     transition: 0.5s fill, 0.5s stroke-width;
@@ -139,4 +139,18 @@ body {
   .location.loaded:hover {
     fill: #F6F7F8;
     stroke-width: 18;
+  }
+
+
+  td, th {
+    width: 89rem;
+    height: 1rem;
+    text-align: right;
+    color: white;
+  }
+  th {
+    text-align: left;
+  }
+  body {
+    padding: 1rem;
   }

@@ -186,3 +186,17 @@ d3.select("#detail-button")
             hide(hiddenDetails)
         }
     })
+
+// handle close panel putton 
+d3.select("#location-close")
+    .on("click", function(){
+        d3.selectAll("circle").remove()
+        panelDeclination.text('')
+        panelInclination.text('')
+        panelMagnitudeNorth.text('')
+        panelMagnitudeEast.text('')
+        panelMagnitudeDown.text('')
+        panelLoading.text('Calculating...')
+
+        d3.select("#panel").style("display", "none")
+    })

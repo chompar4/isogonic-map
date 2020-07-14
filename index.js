@@ -62,20 +62,25 @@ const mapGroup = svg.append("g")
 var panelCoords = d3.select('#location-coord');
 var panelDeclination = d3.select('#location-declination');
 var panelMagnitude = d3.select('#location-magnitude');
+var panelLoading = d3.select('#location-loading')
 
 map.on('click', function(e) {
 
     const coordinates = [e.lngLat.lng, e.lngLat.lat]
     panelCoords.text(formatLocation(coordinates))
 
+    // reset all vals
     d3.selectAll("circle").remove()
+    panelDeclination.text('')
+    panelMagnitude.text('')
+    panelLoading.text('Loading...')
 
     var circle = mapGroup.selectAll("stations")
         .append("stations")
         .data([coordinates])
         .enter()
         .append("circle")
-        .attr("r", 5)
+        .attr("r", 10)
         .attr("class", "station")
         .attr("cx", function(d) { return project(d).x })
         .attr("cy", function(d) { return project(d).y });
@@ -113,6 +118,11 @@ map.on('click', function(e) {
 
         panelDeclination.text(`Declination | ${formatDec(field.D)}`)
         panelMagnitude.text(`Magnitude | ${mag} nT`)
+        panelLoading.text('')
+
+        // signal the values have loaded
+        d3.selectAll("circle")
+            .classed("loaded", true)
 
     })
     .catch(error => {

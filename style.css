@@ -122,3 +122,21 @@ body {
   p:hover, p:focus, li:focus, .no-touch .text-button:hover, .no-touch .text-button:focus, .text-button:active {
     color: #888888;
   }
+
+  .station {
+    fill: none;
+    stroke: #20A4F3;
+    stroke-width: 0.5;
+    cursor: pointer;
+    transition: 0.5s fill, 0.5s stroke-width;
+}
+
+  .station.loaded{
+    fill: #F6F7F8;
+    stroke-width: 10;
+  }
+
+  .station.loaded:hover {
+    fill: #F6F7F8;
+    stroke-width: 18;
+  }

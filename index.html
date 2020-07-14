@@ -6,6 +6,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js'></script>
     <link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Yanone+Kaffeesatz:200" rel="stylesheet">
     <link href="style.css" rel="stylesheet" type="text/css"/>
   </head>
@@ -14,11 +15,14 @@
         <div id="main">
           <div id="map-holder"></div>
           <footer class="page-footer">
-            <div id="yard-panel"> 
+            <div id="panel"> 
                 <div id="location">
                     <p>
-                      <span id="location-close" class="text-button"> ✕ </span>  
-                      <span id="location-coord"></span>
+                      <span id="location-close" class="text-button"> ✕ </span> 
+                      <span id="location-coord"></span> 
+                    </p>
+                    <p>
+                      <span id="location-date"></span>
                     </p>
                     <p>
                       <span id="location-loading"></span>

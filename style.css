@@ -33,7 +33,7 @@ body {
     z-index: 1
   }
 
-  #yard-panel, #geo-panel {
+  #panel, #geo-panel {
     background-color: rgba(2, 5, 19, 0.85);
     border-radius: 0.5rem/0.5rem;
     overflow: hidden;
@@ -47,7 +47,7 @@ body {
     -webkit-transition: opacity 250ms ease, max-height 250ms ease, margin-top 250ms ease;
   }
 
-  .yard-panel.invisible, span.invisible, a.invisible {
+  .panel.invisible, span.invisible, a.invisible {
     display: none;
   }
 
@@ -123,7 +123,7 @@ body {
     color: #888888;
   }
 
-  .station {
+  .location {
     fill: none;
     stroke: #20A4F3;
     stroke-width: 0.5;
@@ -131,12 +131,12 @@ body {
     transition: 0.5s fill, 0.5s stroke-width;
 }
 
-  .station.loaded{
+  .location.loaded{
     fill: #F6F7F8;
     stroke-width: 10;
   }
 
-  .station.loaded:hover {
+  .location.loaded:hover {
     fill: #F6F7F8;
     stroke-width: 18;
   }

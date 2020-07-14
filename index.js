@@ -1,6 +1,6 @@
 crs = {
-    origin: [144.58, -37.49], 
-    zoom: 10
+    origin: [134.21, -25.62], 
+    zoom: 3
 }
 
 function formatLng (x) {
@@ -32,6 +32,10 @@ function getDate() {
     }
 }
 
+function formatDate(date) {
+    return `Date | ${date.day}/${date.month}/${date.day}`
+}
+
 // Set-up map
 mapboxgl.accessToken = 'pk.eyJ1Ijoiam9yZGl0b3N0IiwiYSI6ImQtcVkyclEifQ.vwKrOGZoZSj3N-9MB6FF_A';
 var map = new mapboxgl.Map({
@@ -60,35 +64,36 @@ const mapGroup = svg.append("g")
 
 // get location panel elements
 var panelCoords = d3.select('#location-coord');
+var panelDate = d3.select('#location-date');
 var panelDeclination = d3.select('#location-declination');
 var panelMagnitude = d3.select('#location-magnitude');
 var panelLoading = d3.select('#location-loading')
 
 map.on('click', function(e) {
 
+    let today = getDate()
     const coordinates = [e.lngLat.lng, e.lngLat.lat]
     panelCoords.text(formatLocation(coordinates))
+    panelDate.text(formatDate(today))
 
     // reset all vals
     d3.selectAll("circle").remove()
     panelDeclination.text('')
     panelMagnitude.text('')
-    panelLoading.text('Loading...')
+    panelLoading.text('Calculating...')
 
-    var circle = mapGroup.selectAll("stations")
-        .append("stations")
+    mapGroup.selectAll("locations")
+        .append("locations")
         .data([coordinates])
         .enter()
         .append("circle")
         .attr("r", 10)
-        .attr("class", "station")
+        .attr("class", "location")
         .attr("cx", function(d) { return project(d).x })
         .attr("cy", function(d) { return project(d).y });
 
     let headers = new Headers();
     let url = new URL('https://geomag-api.herokuapp.com/')
-
-    let today = getDate()
 
     params = {
         lng: coordinates[0],
@@ -98,8 +103,6 @@ map.on('click', function(e) {
         mth: today.month,
         yr: today.year
     }
-
-    console.log(params)
 
     url.search = new URLSearchParams(params).toString();
     headers.append('Content-Type', 'application/json');
@@ -112,18 +115,14 @@ map.on('click', function(e) {
     })
     .then(response => response.json())
     .then(field => {
-        console.log(field)
-
-        const mag = Math.sqrt(field.X * field.X + field.Y * field.Y).toFixed(2)
 
         panelDeclination.text(`Declination | ${formatDec(field.D)}`)
-        panelMagnitude.text(`Magnitude | ${mag} nT`)
+        panelMagnitude.text(`Magnitude | ${field.F.toFixed(2)} nT`)
         panelLoading.text('')
 
         // signal the values have loaded
         d3.selectAll("circle")
             .classed("loaded", true)
-
     })
     .catch(error => {
         console.log('Fetch failed : ' + error.message)

@@ -1,25 +1,18 @@
 {
-    "name": "geomag-earth",
-    "description": "Geomagnetic Earth",
+    "name": "geomag-map",
+    "description": "Geomagnetic map",
     "version": "0.0.1",
     "private": true,
-    "homepage": "https://github.com/chompar4/geomag-earth",
+    "homepage": "https://github.com/chompar4/geomag-map",
     "repository": {
         "type": "git",
-        "url": "git://github.com/chompar4/geomag-earth.git"
+        "url": "git://github.com/chompar4/geomag-map.git"
     },
     "engine": "node >= 0.10.21",
     "dependencies": {
-        "when": "2.6.0",
-        "swig": "1.2.2",
-        "mkdirp": "0.3.5",
         "express": "3.4.4"
     },
     "scrits": {
         "start": "node server.js"
-    },
-    "devDependencies": {
-        "grunt": "~0.4.1",
-        "grunt-contrib-jshint": "~0.7.1"
     }
 }

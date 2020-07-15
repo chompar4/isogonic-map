@@ -118,10 +118,22 @@ map.on('load', function() {
         type: 'geojson',
         data: `https://raw.githubusercontent.com/chompar4/geomag_api/master/contour-plots/wmm-declination-contour-1-6-${today.year}.json`
     });
-        
-    // Add a symbol layer
+
     map.addLayer({
-        'id': 'contours',
+        'id': 'contour-labels',
+        'type': 'symbol',
+        'source': 'contours',
+        'layout': {
+            "symbol-placement": "line",
+            'text-field': ['get', 'level-value'],
+            'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+            'text-radial-offset': 0.5,
+            'text-justify': 'auto'
+        },
+    })
+        
+    map.addLayer({
+        'id': 'contour-lines',
         'type': 'line',
         'source': 'contours',
         'paint': {

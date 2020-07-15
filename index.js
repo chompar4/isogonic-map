@@ -120,19 +120,6 @@ map.on('load', function() {
     });
 
     map.addLayer({
-        'id': 'contour-labels',
-        'type': 'symbol',
-        'source': 'contours',
-        'layout': {
-            "symbol-placement": "line",
-            'text-field': ['get', 'level-value'],
-            'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-            'text-radial-offset': 0.5,
-            'text-justify': 'auto'
-        },
-    })
-        
-    map.addLayer({
         'id': 'contour-lines',
         'type': 'line',
         'source': 'contours',
@@ -152,8 +139,22 @@ map.on('load', function() {
             }
             }
         });
+
+    map.addLayer({
+        'id': 'contour-labels',
+        'type': 'symbol',
+        'source': 'contours',
+        'layout': {
+            "symbol-placement": "line",
+            'text-field': ['get', 'level-display'],
+            'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+            'text-radial-offset': 0.5,
+            'text-justify': 'auto'
+        },
+    })
 })
 
+// setup handler for click
 map.on('click', function(e) {
 
     const coordinates = [e.lngLat.lng, e.lngLat.lat]

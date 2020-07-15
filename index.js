@@ -62,27 +62,6 @@ fetch(url, {
 // show contour data for the date
 let today = getDate()
 
-function loadContours () {
-    d3.json(`contour-plots/wmm-declination-contour-1-6-${today.year}.json`, function(err, data) {
-        if (data) {
-            showContours(data)
-        }
-    });
-}
-
-var contours;
-function showContours(conts) {
-    contours = mapGroup.selectAll("contour")
-    .append("contour")
-    .data(conts.features)
-    .enter()
-    .append("path")
-    .attr("d", path)
-    .attr("class", 'contour')
-}
-
-loadContours()
-
 
 // Set-up map
 mapboxgl.accessToken = 'pk.eyJ1Ijoiam9yZGl0b3N0IiwiYSI6ImQtcVkyclEifQ.vwKrOGZoZSj3N-9MB6FF_A';
@@ -121,6 +100,47 @@ var panelMagnitudeDown = d3.select('#magnitude-down');
 var panelLoading = d3.select('#location-loading')
 
 var panel = d3.select("#panel").style("display", "none")
+
+
+// mapbox interpolates values between 'stops', this means we have to 
+// enumerate all the thick and thin levels
+const thick = 4
+const thin = 1
+
+const start = [...Array(10).keys()]
+const vals = [...start.map(x => -10*x), ...start.map(x=>10*x)]
+const contourStops = vals
+    .flatMap(x => [[x-1, thin],[x, thick],[x+1, thin]])
+    .sort((a,b) => a[0]-b[0])
+
+map.on('load', function() {
+    map.addSource('contours', {
+        type: 'geojson',
+        data: `https://raw.githubusercontent.com/chompar4/geomag_api/master/contour-plots/wmm-declination-contour-1-6-${today.year}.json`
+    });
+        
+    // Add a symbol layer
+    map.addLayer({
+        'id': 'contours',
+        'type': 'line',
+        'source': 'contours',
+        'paint': {
+            'line-color': {
+                'property': 'level-value',
+                'stops': [
+                    [-180, 'blue'], 
+                    [-1, 'blue'],
+                    [0, 'red'], 
+                    [180, 'red']
+                ]
+            },
+            'line-width': {
+                'property': 'level-value', 
+                'stops': contourStops
+            }
+            }
+        });
+})
 
 map.on('click', function(e) {
 
@@ -216,9 +236,6 @@ function update() {
     d3.selectAll("circle")
         .attr("cx", function(d) { return project(d).x })
         .attr("cy", function(d) { return project(d).y });
-
-    contours 
-        .attr("d", path);
 };
 
 // expand detail panel

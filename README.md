@@ -1,9 +1,22 @@
 geomag-map
 =====
 
-Demo: [https://geomag-map.herokuapp.com/]
+A visualisation of the world magnetic model for 2020-2024 inclusive. Diplayed using mapbox and d3.
+<img src="assets/map-example.png">
 
-A visualisation of the world magnetic model for 2020-2024 onwards.
+Live: [https://geomag-map.herokuapp.com/]
+
+Note: due to the free version of heroku being used, the api endpoint will sleep if inactive for half an hour. The first request to it may be slow (few seconds).
+
+# About 
+The earths magnetic field drifts with time. Precise navigation is affected over time
+by this drift, to the tune of sometimes 2 degrees every 5 years. The map displays the
+current contours and values for magnetic declination to two significant figures, 
+calculated using the world magnetic model.
+
+<img src="assets/drift.png">
+
+
 
 # Installation 
 ```

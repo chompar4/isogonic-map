@@ -42,6 +42,48 @@ function formatDate(date) {
     return `${date.day}-${date.month}-${date.year}`
 }
 
+// Project any point (lon, lat) to map's current state
+function projectPoint(lon, lat) {
+    var point = map.project(new mapboxgl.LngLat(lon, lat));
+    this.stream.point(point.x, point.y);
+}
+
+// d3 geo path defs
+var transform = d3.geoTransform({point:projectPoint});
+var path = d3.geoPath().projection(transform);
+
+// dummy ping the server to wake it up
+let url = new URL('https://geomag-api.herokuapp.com/')
+fetch(url, {
+    mode: 'cors',
+    method: 'GET',
+})
+
+// show contour data for the date
+let today = getDate()
+
+function loadContours () {
+    d3.json(`contour-plots/wmm-declination-contour-1-6-${today.year}.json`, function(err, data) {
+        if (data) {
+            showContours(data)
+        }
+    });
+}
+
+var contours;
+function showContours(conts) {
+    contours = mapGroup.selectAll("contour")
+    .append("contour")
+    .data(conts.features)
+    .enter()
+    .append("path")
+    .attr("d", path)
+    .attr("class", 'contour')
+}
+
+loadContours()
+
+
 // Set-up map
 mapboxgl.accessToken = 'pk.eyJ1Ijoiam9yZGl0b3N0IiwiYSI6ImQtcVkyclEifQ.vwKrOGZoZSj3N-9MB6FF_A';
 var map = new mapboxgl.Map({
@@ -66,7 +108,7 @@ var svg = d3.select(canvas)
     .attr("height", $("svg").parent().height())
 
 const mapGroup = svg.append("g")
-    .attr('class', 'map-group');
+    .attr('class', 'map-group')
 
 // get location panel elements
 var panelCoords = d3.select('#location-coord');
@@ -82,7 +124,6 @@ var panel = d3.select("#panel").style("display", "none")
 
 map.on('click', function(e) {
 
-    let today = getDate()
     const coordinates = [e.lngLat.lng, e.lngLat.lat]
     panel.style("display", "block")
     panelCoords.text(formatLocation(coordinates))
@@ -175,6 +216,9 @@ function update() {
     d3.selectAll("circle")
         .attr("cx", function(d) { return project(d).x })
         .attr("cy", function(d) { return project(d).y });
+
+    contours 
+        .attr("d", path);
 };
 
 // expand detail panel

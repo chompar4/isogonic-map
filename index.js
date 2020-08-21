@@ -53,7 +53,7 @@ var transform = d3.geoTransform({point:projectPoint});
 var path = d3.geoPath().projection(transform);
 
 // dummy ping the server to wake it up
-let url = new URL('https://geomag-api.herokuapp.com/')
+let url = new URL('https://isogonic-api.herokuapp.com/')
 fetch(url, {
     mode: 'cors',
     method: 'GET',
@@ -116,7 +116,7 @@ const contourStops = vals
 map.on('load', function() {
     map.addSource('contours', {
         type: 'geojson',
-        data: `https://raw.githubusercontent.com/chompar4/geomag_api/master/isogons/wmm-declination-contour-1-6-${today.year}.json`
+        data: `https://raw.githubusercontent.com/chompar4/isogonic-api/master/isogons/wmm-declination-contour-1-6-${today.year}.json`
     });
 
     map.addLayer({
@@ -182,7 +182,7 @@ map.on('click', function(e) {
         .attr("cy", function(d) { return project(d).y });
 
     let headers = new Headers();
-    let url = new URL('https://geomag-api.herokuapp.com/')
+    let url = new URL('https://isogonic-api.herokuapp.com/')
 
     params = {
         lng: coordinates[0],

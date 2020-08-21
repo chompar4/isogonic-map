@@ -1,12 +1,12 @@
 {
-    "name": "geomag-map",
-    "description": "Geomagnetic map",
+    "name": "isogonic-map",
+    "description": "Isogonic map",
     "version": "0.0.1",
     "private": true,
-    "homepage": "https://github.com/chompar4/geomag-map",
+    "homepage": "https://github.com/chompar4/isogonic-map",
     "repository": {
         "type": "git",
-        "url": "git://github.com/chompar4/geomag-map.git"
+        "url": "git://github.com/chompar4/isogonic-map.git"
     },
     "engine": "node >= 0.10.21",
     "dependencies": {

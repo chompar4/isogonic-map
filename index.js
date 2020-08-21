@@ -116,7 +116,7 @@ const contourStops = vals
 map.on('load', function() {
     map.addSource('contours', {
         type: 'geojson',
-        data: `https://raw.githubusercontent.com/chompar4/geomag_api/master/contour-plots/wmm-declination-contour-1-6-${today.year}.json`
+        data: `https://raw.githubusercontent.com/chompar4/geomag_api/master/isogons/wmm-declination-contour-1-6-${today.year}.json`
     });
 
     map.addLayer({
